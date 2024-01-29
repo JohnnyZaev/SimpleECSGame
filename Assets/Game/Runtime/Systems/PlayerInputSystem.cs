@@ -24,6 +24,7 @@ namespace Game.Runtime.Systems
             ref var playerCmp = ref _unitCmpPool.Value.Add(_playerEntity);
 
             playerCmp.View = _sceneData.Value.PlayerView;
+            playerCmp.View.Construct(_playerEntity, _world.Value);
         }
 
         public void Run(IEcsSystems systems)

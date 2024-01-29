@@ -1,3 +1,5 @@
+using Game.Runtime.Components;
+using Leopotam.EcsLite;
 using UnityEngine;
 
 namespace Game.Runtime.Views
@@ -9,6 +11,23 @@ namespace Game.Runtime.Views
 
         [SerializeField] private SpriteRenderer spriteRenderer;
         [SerializeField] private Animator animator;
+        
+        private int _entity;
+        private EcsWorld _world;
+        
+        public void Construct(int entity, EcsWorld world)
+        {
+            _entity = entity;
+            _world = world;
+        }
+        
+        private void OnCollisionEnter2D(Collision2D _)
+        {
+            var entity = _world.NewEntity();
+            var pool = _world.GetPool<CollisionEvent>();
+            ref var evt = ref pool.Add(entity);
+            evt.CollidedEntity = _entity;
+        }
 
         public void Move(Vector3 translation)
         {
@@ -25,6 +44,24 @@ namespace Game.Runtime.Views
         {
             animator.SetBool(Up, velocity.y != 0);
             animator.SetBool(Walk, velocity.x != 0 && velocity.y == 0);
+        }
+        
+        public void SetPosition(Vector3 position)
+        {
+            transform.position = position;
+        }
+
+        public void RotateTo(Vector3 position)
+        {
+            var direction = position - transform.position;
+            var angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+            var rotation = Quaternion.Euler(0, 0, angle - 90);
+            transform.rotation = rotation;
+        }
+
+        public void SetActive(bool state)
+        {
+            gameObject.SetActive(state);
         }
     }
 }

@@ -9,6 +9,7 @@ namespace Game.Runtime
     internal sealed class EcsStartup : MonoBehaviour
     {
         [SerializeField] private SceneService sceneService;
+        [SerializeField] private EnemiesSpawnerService enemiesSpawnerService;
         
         private EcsWorld _world;
         private IEcsSystems _systems;
@@ -19,10 +20,13 @@ namespace Game.Runtime
             _systems
                 .Add(new PlayerInputSystem())
                 .Add(new MovementSystem())
+                .Add(new EnemiesSystem())
+                .Add(new ScoreCounterSystem())
 #if UNITY_EDITOR
                 .Add (new Leopotam.EcsLite.UnityEditor.EcsWorldDebugSystem ())
 #endif
                 .Inject(sceneService)
+                .Inject(enemiesSpawnerService)
                 .Init ();
         }
 
