@@ -1,7 +1,9 @@
+using Game.Runtime.Components;
 using Game.Runtime.Services;
 using Game.Runtime.Systems;
 using Leopotam.EcsLite;
 using Leopotam.EcsLite.Di;
+using Leopotam.EcsLite.ExtendedSystems;
 using UnityEngine;
 
 namespace Game.Runtime 
@@ -22,6 +24,8 @@ namespace Game.Runtime
                 .Add(new MovementSystem())
                 .Add(new EnemiesSystem())
                 .Add(new ScoreCounterSystem())
+                .Add(new EndGameSystem())
+                .DelHere<CollisionEvent>()
 #if UNITY_EDITOR
                 .Add (new Leopotam.EcsLite.UnityEditor.EcsWorldDebugSystem ())
 #endif

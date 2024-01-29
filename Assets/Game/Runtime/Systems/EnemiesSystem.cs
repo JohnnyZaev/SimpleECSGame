@@ -25,6 +25,9 @@ namespace Game.Runtime.Systems {
 
         public void Run(IEcsSystems systems)
         {
+            if (_sceneService.Value.GameIsOver)
+                return;
+            
             CreateEnemy();
             CheckEnemyLifetime();
         }

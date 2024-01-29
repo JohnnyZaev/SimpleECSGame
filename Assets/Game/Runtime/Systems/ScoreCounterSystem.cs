@@ -21,6 +21,9 @@ namespace Game.Runtime.Systems
 
         public void Run(IEcsSystems systems)
         {
+            if (_sceneService.Value.GameIsOver)
+                return;
+            
             if ((_timer += Time.deltaTime) < 1)
                 return;
 

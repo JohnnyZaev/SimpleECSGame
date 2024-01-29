@@ -9,5 +9,6 @@ namespace Game.Runtime.Services
         [field: SerializeField] public float PlayerMoveSpeed { get; private set; } = 10;
         [field: SerializeField] public CounterView CounterView { get; private set; }
         [field: SerializeField] public PopupView PopupView { get; private set; }
+        public bool GameIsOver { get; set; }
     }
 }
