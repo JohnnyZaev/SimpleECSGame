@@ -1,50 +1,44 @@
+using Game.Runtime.Services;
+using Game.Runtime.Systems;
 using Leopotam.EcsLite;
+using Leopotam.EcsLite.Di;
 using UnityEngine;
 
-namespace Client {
-    sealed class EcsStartup : MonoBehaviour {
-        EcsWorld _world;        
-        IEcsSystems _systems;
+namespace Game.Runtime 
+{
+    internal sealed class EcsStartup : MonoBehaviour
+    {
+        [SerializeField] private SceneService sceneService;
+        
+        private EcsWorld _world;
+        private IEcsSystems _systems;
 
-        void Start () {
+        private void Start () {
             _world = new EcsWorld ();
             _systems = new EcsSystems (_world);
             _systems
-                // register your systems here, for example:
-                // .Add (new TestSystem1 ())
-                // .Add (new TestSystem2 ())
-                
-                // register additional worlds here, for example:
-                // .AddWorld (new EcsWorld (), "events")
+                .Add(new PlayerInputSystem())
+                .Add(new MovementSystem())
 #if UNITY_EDITOR
-                // add debug systems for custom worlds here, for example:
-                // .Add (new Leopotam.EcsLite.UnityEditor.EcsWorldDebugSystem ("events"))
                 .Add (new Leopotam.EcsLite.UnityEditor.EcsWorldDebugSystem ())
 #endif
+                .Inject(sceneService)
                 .Init ();
         }
 
-        void Update () {
-            // process systems here.
+        private void Update () {
             _systems?.Run ();
         }
 
-        void OnDestroy () {
+        private void OnDestroy () {
             if (_systems != null) {
-                // list of custom worlds will be cleared
-                // during IEcsSystems.Destroy(). so, you
-                // need to save it here if you need.
                 _systems.Destroy ();
                 _systems = null;
             }
             
-            // cleanup custom worlds here.
-            
-            // cleanup default world.
-            if (_world != null) {
-                _world.Destroy ();
-                _world = null;
-            }
+            if (_world == null) return;
+            _world.Destroy ();
+            _world = null;
         }
     }
 }
